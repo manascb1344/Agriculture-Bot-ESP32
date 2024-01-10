@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>DSLD Project Agriculture Bot</title>
+		<style>
+			body {
+				font-family: Arial, sans-serif;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				height: 100vh;
+				margin: 0;
+			}
+
+			h1 {
+				text-align: center;
+			}
+
+			table {
+				margin: 0 auto;
+			}
+
+			td {
+				text-align: center;
+			}
+
+			button {
+				width: 80px;
+				height: 80px;
+				font-size: 18px;
+				margin: 5px;
+			}
+
+			@media (max-width: 600px) {
+				button {
+					width: 60px;
+					height: 60px;
+					font-size: 14px;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<h1>DSLD Project Agriculture Bot</h1>
+		<table>
+			<tr>
+				<td><button id="forwardLeftBtn" ontouchstart="sendCommand('G')" ontouchend="sendCommand('S')">↖️</button></td>
+				<td><button id="forwardBtn" ontouchstart="sendCommand('F')" ontouchend="sendCommand('S')">⬆️</button></td>
+				<td><button id="forwardRightBtn" ontouchstart="sendCommand('I')" ontouchend="sendCommand('S')">↗️</button></td>
+			</tr>
+			<tr>
+				<td><button id="leftBtn" ontouchstart="sendCommand('L')" ontouchend="sendCommand('S')">⬅️</button></td>
+				<td><button id="stopBtn" ontouchstart="sendCommand('S')" ontouchend="sendCommand('S')">⏹️</button></td>
+				<td><button id="rightBtn" ontouchstart="sendCommand('R')" ontouchend="sendCommand('S')">➡️</button></td>
+			</tr>
+			<tr>
+				<td><button id="backwardLeftBtn" ontouchstart="sendCommand('H')" ontouchend="sendCommand('S')">↙️</button></td>
+				<td><button id="backwardBtn" ontouchstart="sendCommand('B')" ontouchend="sendCommand('S')">⬇️</button></td>
+				<td><button id="backwardRightBtn" ontouchstart="sendCommand('J')" ontouchend="sendCommand('S')">↘️</button></td>
+			</tr>
+		</table>
+
+		<script>
+			function sendCommand(command) {
+				var xhr = new XMLHttpRequest();
+				xhr.open("GET", "/?State=" + command, true);
+				xhr.send();
+			}
+		</script>
+	</body>
+</html>
