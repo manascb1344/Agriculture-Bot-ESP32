@@ -37,6 +37,9 @@ void setup()
 	pinMode(IN_3, OUTPUT);
 	pinMode(IN_4, OUTPUT);
 	pinMode(PUMP_PIN, OUTPUT);
+	pinMode(smokepin, INPUT);
+	pinMode(soil_sensor, INPUT);
+
 	digitalWrite(PUMP_PIN, LOW);
 
 	Serial.begin(115200);
@@ -212,6 +215,40 @@ float readDHTHumidity()
 	}
 }
 
+float readSmokeSensor()
+{
+	// Sensor readings may also be up to 2 seconds
+	// Read temperature as Celsius (the default)
+	int t = analogRead(smokepin);
+	if (isnan(t))
+	{
+		Serial.println("Failed to read from Smoke sensor!");
+		return -1;
+	}
+	else
+	{
+		Serial.println(t);
+		return t;
+	}
+}
+
+float readSoilSensor()
+{
+	// Sensor readings may also be up to 2 seconds
+	// Read temperature as Celsius (the default)
+	float t = analogRead(soil_sensor);
+	if (isnan(t))
+	{
+		Serial.println("Failed to read from DHT sensor!");
+		return -1;
+	}
+	else
+	{
+		Serial.println(t);
+		return t;
+	}
+}
+
 const char *htmlHomePage PROGMEM = R"HTMLHOMEPAGE(
 <!DOCTYPE html>
 <html lang="en">
@@ -282,7 +319,8 @@ const char *htmlHomePage PROGMEM = R"HTMLHOMEPAGE(
 		
 		<p>Temperature: <span id="temperature">--</span> °C</p>
     <p>Humidity: <span id="humidity">--</span>%</p>
-
+		<p>Smoke Sensor: <span id="smoke">--</span></p>
+    <p>Soil Moisture: <span id="soil">--</span></p>
 		<script>
 			function sendCommand(command) {
 				var xhr = new XMLHttpRequest();
@@ -297,6 +335,8 @@ const char *htmlHomePage PROGMEM = R"HTMLHOMEPAGE(
                     var data = JSON.parse(xhr.responseText);
                     document.getElementById("temperature").innerText = data.temperature.toFixed(2);
                     document.getElementById("humidity").innerText = data.humidity.toFixed(2);
+										document.getElementById("smoke").innerText = data.smoke.toFixed(2);
+										document.getElementById("soil").innerText = data.soil.toFixed(2);
                 }
             };
             xhr.open("GET", "/sensorData", true);
@@ -319,7 +359,7 @@ void HTTP_handleRoot(void)
 
 void HTTP_handleSensorData(void)
 {
-	String sensorData = "{\"temperature\":" + String(readDHTTemperature()) + ",\"humidity\":" + String(readDHTHumidity()) + "}";
+	String sensorData = "{\"temperature\":" + String(readDHTTemperature()) + ",\"humidity\":" + String(readDHTHumidity()) + ",\"smoke\":" + String(readSmokeSensor()) + ",\"soil\":" + String(readSoilSensor()) + "}";
 	server.send(200, "application/json", sensorData);
 }
 
