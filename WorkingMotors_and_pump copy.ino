@@ -6,7 +6,8 @@ String command;			 // String to store app command state.
 int speedCar = 1023; // 400 - 1023.
 int speed_Coeff = 3;
 
-const char *ssid = "NodeMCU Car";
+const char *ssid = "POCO";				 // Replace with your existing WiFi SSID
+const char *password = "12345678"; // Replace with your WiFi password
 WebServer server(80);
 
 #define ENA 23	// Enable/speed motors Right        GPIO14(D5)
@@ -16,6 +17,7 @@ WebServer server(80);
 #define IN_3 18 // L298N in3 motors Left            GPIO2(D4)
 #define IN_4 19 // L298N in4 motors Left            GPIO0(D3)
 #define PUMP_PIN 2
+
 void setup()
 {
 	pinMode(ENA, OUTPUT);
@@ -29,18 +31,25 @@ void setup()
 
 	Serial.begin(115200);
 
-	// Connecting WiFi
-	WiFi.mode(WIFI_AP);
-	WiFi.softAP(ssid);
+	// Connecting to existing WiFi
+	WiFi.begin(ssid, password);
+	while (WiFi.status() != WL_CONNECTED)
+	{
+		delay(1000);
+		Serial.println("Connecting to WiFi...");
+	}
 
-	IPAddress myIP = WiFi.softAPIP();
-	Serial.print("AP IP address: ");
-	Serial.println(myIP);
+	Serial.println("Connected to WiFi");
+	Serial.print("IP address: ");
+	Serial.println(WiFi.localIP());
 
 	// Starting WEB-server
 	server.on("/", HTTP_handleRoot);
+	server.on("/sensorData", HTTP_handleSensorData); // Add the new endpoint
+
 	server.onNotFound(HTTP_handleRoot);
 	server.begin();
+	delay(4000);
 }
 
 void goAhead()
