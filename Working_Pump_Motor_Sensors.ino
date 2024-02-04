@@ -8,7 +8,8 @@ String command;
 int speedCar = 1023; // 400 - 1023.
 int speed_Coeff = 3;
 
-const char *ssid = "NodeMCU Car";
+const char *ssid = "POCOX3";			 
+const char *password = "12345677"; 
 WebServer server(80);
 
 #define ENA 23	// Enable/speed motors Right        GPIO14(D5)
@@ -18,6 +19,8 @@ WebServer server(80);
 #define IN_3 18 // L298N in3 motors Left            GPIO2(D4)
 #define IN_4 19 // L298N in4 motors Left            GPIO0(D3)
 
+#define PUMP_PIN 2
+
 #define DHTPIN 21
 #define DHTTYPE DHT11
 #define smokepin 34
@@ -25,7 +28,6 @@ WebServer server(80);
 
 DHT dht(DHTPIN, DHTTYPE);
 
-#define PUMP_PIN 2
 void setup()
 {
 	pinMode(ENA, OUTPUT);
@@ -35,21 +37,29 @@ void setup()
 	pinMode(IN_3, OUTPUT);
 	pinMode(IN_4, OUTPUT);
 	pinMode(PUMP_PIN, OUTPUT);
+	pinMode(smokepin, INPUT);
+	pinMode(soil_sensor, INPUT);
+
 	digitalWrite(PUMP_PIN, LOW);
 
 	Serial.begin(115200);
 	dht.begin();
 
-	// Connecting WiFi
-	WiFi.mode(WIFI_AP);
-	WiFi.softAP(ssid);
+	// Connecting to existing WiFi
+	WiFi.begin(ssid, password);
+	while (WiFi.status() != WL_CONNECTED)
+	{
+		delay(1000);
+		Serial.println("Connecting to WiFi....");
+	}
 
-	IPAddress myIP = WiFi.softAPIP();
-	Serial.print("AP IP address: ");
-	Serial.println(myIP);
+	Serial.println("Connected to WiFi");
+	Serial.print("IP address: ");
+	Serial.println(WiFi.localIP());
 
 	// Starting WEB-server
 	server.on("/", HTTP_handleRoot);
+
 	server.on("/sensorData", HTTP_handleSensorData); 
 
 	server.onNotFound(HTTP_handleRoot);
@@ -203,6 +213,36 @@ float readDHTHumidity()
 	}
 }
 
+float readSmokeSensor()
+{
+	int t = analogRead(smokepin);
+	if (isnan(t))
+	{
+		Serial.println("Failed to read from Smoke sensor!");
+		return -1;
+	}
+	else
+	{
+		Serial.println(t);
+		return t;
+	}
+}
+
+float readSoilSensor()
+{
+	float t = analogRead(soil_sensor);
+	if (isnan(t))
+	{
+		Serial.println("Failed to read from DHT sensor!");
+		return -1;
+	}
+	else
+	{
+		Serial.println(t);
+		return t;
+	}
+}
+
 const char *htmlHomePage PROGMEM = R"HTMLHOMEPAGE(
 <!DOCTYPE html>
 <html lang="en">
@@ -273,7 +313,8 @@ const char *htmlHomePage PROGMEM = R"HTMLHOMEPAGE(
 		
 		<p>Temperature: <span id="temperature">--</span> °C</p>
     <p>Humidity: <span id="humidity">--</span>%</p>
-
+		<p>Smoke Sensor: <span id="smoke">--</span></p>
+    <p>Soil Moisture: <span id="soil">--</span></p>
 		<script>
 			function sendCommand(command) {
 				var xhr = new XMLHttpRequest();
@@ -288,6 +329,8 @@ const char *htmlHomePage PROGMEM = R"HTMLHOMEPAGE(
                     var data = JSON.parse(xhr.responseText);
                     document.getElementById("temperature").innerText = data.temperature.toFixed(2);
                     document.getElementById("humidity").innerText = data.humidity.toFixed(2);
+										document.getElementById("smoke").innerText = data.smoke.toFixed(2);
+										document.getElementById("soil").innerText = data.soil.toFixed(2);
                 }
             };
             xhr.open("GET", "/sensorData", true);
@@ -309,7 +352,7 @@ void HTTP_handleRoot(void)
 
 void HTTP_handleSensorData(void)
 {
-	String sensorData = "{\"temperature\":" + String(readDHTTemperature()) + ",\"humidity\":" + String(readDHTHumidity()) + "}";
+	String sensorData = "{\"temperature\":" + String(readDHTTemperature()) + ",\"humidity\":" + String(readDHTHumidity()) + ",\"smoke\":" + String(readSmokeSensor()) + ",\"soil\":" + String(readSoilSensor()) + "}";
 	server.send(200, "application/json", sensorData);
 }
 
