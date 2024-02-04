@@ -36,7 +36,7 @@ std::vector<MOTOR_PINS> motorPins =
 #define FORWARD 1
 #define BACKWARD -1
 
-const int PWMFreq = 1000; /* 1 KHz */
+const int PWMFreq = 1000;
 const int PWMResolution = 8;
 const int PWMSpeedChannel = 1023;
 
@@ -314,7 +314,6 @@ void onCarInputWebSocketEvent(AsyncWebSocket *server,
 
 void setUpPinModes()
 {
-	// Set up PWM
 	ledcSetup(PWMSpeedChannel, PWMFreq, PWMResolution);
 
 	for (int i = 0; i < motorPins.size(); i++)
@@ -323,7 +322,6 @@ void setUpPinModes()
 		pinMode(motorPins[i].pinIN1, OUTPUT);
 		pinMode(motorPins[i].pinIN2, OUTPUT);
 
-		/* Attach the PWM Channel to the motor enb Pin */
 		ledcAttachPin(motorPins[i].pinEn, PWMSpeedChannel);
 	}
 	moveCar(STOP);
