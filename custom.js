@@ -29,9 +29,6 @@ function sendMessage(message) {
   websocket.send(message);
 }
 
-/*
-Speed Settings Handler
-*/
 var speedSettings = document.querySelectorAll(
   'input[type=radio][name="speed-settings"]'
 );
@@ -49,11 +46,7 @@ function setDefaultSpeed() {
   normalOption.checked = true;
 }
 
-/*
-O-Pad/ D-Pad Controller and Javascript Code
-*/
-// Prevent scrolling on every click!
-// super sweet vanilla JS delegated event handling!
+
 document.body.addEventListener("click", function (e) {
   if (e.target && e.target.nodeName == "A") {
     e.preventDefault();

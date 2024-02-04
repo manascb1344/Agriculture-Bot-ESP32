@@ -4,12 +4,12 @@
 #include <Adafruit_Sensor.h>
 #include <DHT.h>
 
-String command;			 // String to store app command state.
+String command;
 int speedCar = 1023; // 400 - 1023.
 int speed_Coeff = 3;
 
-const char *ssid = "POCOX3";			 // Replace with your existing WiFi SSID
-const char *password = "12345677"; // Replace with your WiFi password
+const char *ssid = "POCOX3";			 
+const char *password = "12345677"; 
 WebServer server(80);
 
 #define ENA 23	// Enable/speed motors Right        GPIO14(D5)
@@ -59,11 +59,12 @@ void setup()
 
 	// Starting WEB-server
 	server.on("/", HTTP_handleRoot);
-	server.on("/sensorData", HTTP_handleSensorData);
+
+	server.on("/sensorData", HTTP_handleSensorData); 
 
 	server.onNotFound(HTTP_handleRoot);
 	server.begin();
-	delay(4000); // Add a delay after initializing DHT sensor
+	delay(4000);
 }
 
 void goAhead()
@@ -184,8 +185,6 @@ void stopPump()
 
 float readDHTTemperature()
 {
-	// Sensor readings may also be up to 2 seconds
-	// Read temperature as Celsius (the default)
 	float t = dht.readTemperature();
 	if (isnan(t))
 	{
@@ -201,7 +200,6 @@ float readDHTTemperature()
 
 float readDHTHumidity()
 {
-	// Sensor readings may also be up to 2 seconds
 	float h = dht.readHumidity();
 	if (isnan(h))
 	{
@@ -343,7 +341,6 @@ const char *htmlHomePage PROGMEM = R"HTMLHOMEPAGE(
             xhr.send();
         }
 
-        // Update sensor data every 5 seconds
         setInterval(updateSensorData, 5000);
 		</script>
 	</body>

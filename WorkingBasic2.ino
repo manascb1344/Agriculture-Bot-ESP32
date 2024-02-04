@@ -2,7 +2,7 @@
 #include <WiFiClient.h>
 #include <WebServer.h>
 
-String command;			 // String to store app command state.
+String command;
 int speedCar = 1023; // 400 - 1023.
 int speed_Coeff = 3;
 
@@ -171,7 +171,6 @@ const char *htmlHomePage PROGMEM = R"HTMLHOMEPAGE(
       xhr.send();
     }
 
-    // Add event listeners to each button
     document.getElementById('forwardBtn').addEventListener('click', function() {
       sendCommand('F');
     });
