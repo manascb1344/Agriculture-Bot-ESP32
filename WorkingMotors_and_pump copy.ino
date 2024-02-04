@@ -6,8 +6,8 @@ String command;.
 int speedCar = 1023; // 400 - 1023.
 int speed_Coeff = 3;
 
-const char *ssid = "POCO";				 // Replace with your existing WiFi SSID
-const char *password = "12345678"; // Replace with your WiFi password
+const char *ssid = "POCO";
+const char *password = "12345678";
 WebServer server(80);
 
 #define ENA 23	// Enable/speed motors Right        GPIO14(D5)
@@ -45,7 +45,7 @@ void setup()
 
 	// Starting WEB-server
 	server.on("/", HTTP_handleRoot);
-	server.on("/sensorData", HTTP_handleSensorData); // Add the new endpoint
+	server.on("/sensorData", HTTP_handleSensorData);
 
 	server.onNotFound(HTTP_handleRoot);
 	server.begin();
