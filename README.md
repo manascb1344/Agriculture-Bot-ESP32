@@ -21,7 +21,7 @@ Efficiency and time management are critical aspects addressed by this project. A
 
 ## 3. Web Interface 🖥️
 
-This code integrates with a web interface for remote control and monitoring.
+This code integrates with a web interface for remote control and monitoring of the bot.
 
 ![Web Interface](image.png)
 
