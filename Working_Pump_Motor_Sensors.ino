@@ -215,8 +215,6 @@ float readDHTHumidity()
 
 float readSmokeSensor()
 {
-	// Sensor readings may also be up to 2 seconds
-	// Read temperature as Celsius (the default)
 	int t = analogRead(smokepin);
 	if (isnan(t))
 	{
@@ -232,8 +230,6 @@ float readSmokeSensor()
 
 float readSoilSensor()
 {
-	// Sensor readings may also be up to 2 seconds
-	// Read temperature as Celsius (the default)
 	float t = analogRead(soil_sensor);
 	if (isnan(t))
 	{
