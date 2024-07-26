@@ -24,4 +24,7 @@ Efficiency and time management are critical aspects addressed by this project. A
 This code integrates with a web interface for remote control and monitoring of the bot.
 
 ![Web Interface](image.png)
-(![Circuit_Diagram](https://github.com/user-attachments/assets/20777b30-8bee-41fa-ade5-1b8b1e9b696d))
+
+## 4. Circuit Diagram
+
+![Circuit_Diagram](https://github.com/user-attachments/assets/20777b30-8bee-41fa-ade5-1b8b1e9b696d)
